@@ -1,6 +1,7 @@
 package dna;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -13,6 +14,42 @@ public class NucleotideTest {
     assertThat(dna.count('A')).isEqualTo(0);
   }
 
+  @Test
+  public void test_constructor_NullDnaString_ThrowsException() {
+	  try {
+		  DNA dna = new DNA( null );
+		  fail("Supposed to catch NullPointerException");
+	  } catch ( NullPointerException npe ) {
+		  
+	  } catch ( Exception e ) {
+		  fail("Expected to catch NullPointerException");
+	  }
+  }
+  
+  @Test
+  public void test_constructor_LowerCaseCharacters_ReturnsExpectedResult() {
+	  DNA dna = new DNA("gattaca");
+	    dna.count('A');
+	    assertThat(dna.nucleotideCounts()).hasSize(4).contains(
+	        entry('A', 3),
+	        entry('C', 1),
+	        entry('G', 1),
+	        entry('T', 2)
+	    );
+  }
+  
+  @Test
+  public void test_constructor_HandlesInvalidNucleotides_ReturnsExpectedResult() {
+	  DNA dna = new DNA("XGATTACAX");
+	    dna.count('A');
+	    assertThat(dna.nucleotideCounts()).hasSize(4).contains(
+	        entry('A', 3),
+	        entry('C', 1),
+	        entry('G', 1),
+	        entry('T', 2)
+	    );
+  }
+  
   @Test
   public void testEmptyDnaStringHasNoNucleotides() {
     DNA dna = new DNA("");
